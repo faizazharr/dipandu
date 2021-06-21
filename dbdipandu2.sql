@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jun 17, 2021 at 02:41 PM
+-- Generation Time: Jun 21, 2021 at 11:00 AM
 -- Server version: 10.4.17-MariaDB
 -- PHP Version: 7.4.13
 
@@ -162,17 +162,8 @@ CREATE TABLE `pemeriksaan` (
   `lingkarbadan` int(255) NOT NULL,
   `lingkarkepala` int(255) NOT NULL,
   `umur` varchar(255) DEFAULT NULL,
-  `id_posyandu` int(11) NOT NULL
+  `id_posyandu` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
---
--- Dumping data for table `pemeriksaan`
---
-
-INSERT INTO `pemeriksaan` (`id`, `id_anak`, `berat`, `tinggi`, `lingkarbadan`, `lingkarkepala`, `umur`, `id_posyandu`) VALUES
-(26, 17, 12, 12, 12, 12, '1 Bulan ', 14),
-(28, 23, 12, 12, 12, 12, '4 Bulan ', 14),
-(29, 24, 12, 12, 12, 12, '4 Bulan ', 14);
 
 -- --------------------------------------------------------
 
@@ -236,13 +227,6 @@ CREATE TABLE `posyandu` (
   `waktu_mulai` time NOT NULL,
   `waktu_selesai` time NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
---
--- Dumping data for table `posyandu`
---
-
-INSERT INTO `posyandu` (`id`, `tanggal_posiandu`, `hari`, `waktu_mulai`, `waktu_selesai`) VALUES
-(14, '2021-06-16', 'Rabu', '06:29:00', '15:03:00');
 
 -- --------------------------------------------------------
 
@@ -337,8 +321,8 @@ ALTER TABLE `notifikasi`
 --
 ALTER TABLE `pemeriksaan`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `id_posyandu` (`id_posyandu`),
-  ADD KEY `pemeriksaan_ibfk_3` (`id_anak`);
+  ADD KEY `pemeriksaan_ibfk_3` (`id_anak`),
+  ADD KEY `id_posyandu` (`id_posyandu`);
 
 --
 -- Indexes for table `penyuluhan`
@@ -452,14 +436,14 @@ ALTER TABLE `anak`
 --
 ALTER TABLE `detail_imunisasi`
   ADD CONSTRAINT `detail_imunisasi_ibfk_1` FOREIGN KEY (`id_anak`) REFERENCES `anak` (`id`) ON DELETE SET NULL,
-  ADD CONSTRAINT `detail_imunisasi_ibfk_2` FOREIGN KEY (`id_imunisasi`) REFERENCES `imunisasi` (`id`);
+  ADD CONSTRAINT `detail_imunisasi_ibfk_2` FOREIGN KEY (`id_imunisasi`) REFERENCES `imunisasi` (`id`) ON DELETE SET NULL;
 
 --
 -- Constraints for table `pemeriksaan`
 --
 ALTER TABLE `pemeriksaan`
-  ADD CONSTRAINT `pemeriksaan_ibfk_2` FOREIGN KEY (`id_posyandu`) REFERENCES `posyandu` (`id`),
-  ADD CONSTRAINT `pemeriksaan_ibfk_3` FOREIGN KEY (`id_anak`) REFERENCES `anak` (`id`) ON DELETE SET NULL;
+  ADD CONSTRAINT `pemeriksaan_ibfk_3` FOREIGN KEY (`id_anak`) REFERENCES `anak` (`id`) ON DELETE SET NULL,
+  ADD CONSTRAINT `pemeriksaan_ibfk_4` FOREIGN KEY (`id_posyandu`) REFERENCES `posyandu` (`id`) ON DELETE SET NULL;
 
 --
 -- Constraints for table `user`
