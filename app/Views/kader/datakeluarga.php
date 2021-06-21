@@ -1,11 +1,22 @@
 <?= $this->extend('kader/themplates/index'); ?>
 <?= $this->section('content'); ?>
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
-    integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-<link rel="stylesheet" href="https://cdn.datatables.net/1.10.22/css/jquery.dataTables.min.css">
 <!-- content -->
 <div class="container-fluid">
-
+    <!-- Flash Data -->
+    <?php if (!empty(session()->getFlashdata('tambah'))) { ?>
+        <div class="alert alert-success">
+            <?php echo session()->getFlashdata('tambah') ?>
+        </div>
+    <?php }else if (!empty(session()->getFlashdata('edit'))) { ?>
+        <div class="alert alert-success">
+            <?php echo session()->getFlashdata('edit') ?>
+        </div>
+    <?php }else if (!empty(session()->getFlashdata('hapus'))) { ?>
+        <div class="alert alert-success">
+            <?php echo session()->getFlashdata('hapus') ?>
+        </div>
+    <?php } ?>
+    <!-- End Flash Data -->
     <div class="card shadow mb-4 mb-6">
         <div class="card-header py-3">
             <h6 class="m-0 font-weight-bold text-dark">Data Orangtua</h6>
@@ -85,12 +96,48 @@
                         <td><?= $key['tanggal_lahir']; ?></td>
                         <td><?= $key['umur']; ?></td>
                         <td>
-                            <button class="btn btn-success btn-circle" data-toggle="modal"
-                                data-target="#editmodal<?= $id; ?>">
+                            <a href="" class="btn btn-success btn-circle" data-toggle="modal"
+                                data-target="#editmodal<?= $id; ?>" data-whatever="@mdo"> 
                                 <i class="fas fa-edit"></i>
-                            </button>
+                            </a>
+                            <a href="" class="btn btn-danger btn-circle" data-toggle="modal"
+                                data-target="#hapusmodal<?= $id; ?>" data-whatever="@mdo">
+                                <i class="fas fa-trash"></i>
+                            </a>
+                            <form action="<?= base_url('/kader/imunisasiKeluarga')?>" method="post" class="d-inline">
+                                <input type="hidden" name="id" value="<?= $id?>">
+                                <button type="submit" class="btn btn-primary btn-circle">
+                                    <i class="fas fa-calendar-day"></i>
+                                </button>
+                            </form>
                         </td>
                     </tr>
+
+                    <div class="modal fade" id="hapusmodal<?= $id; ?>" tabindex="-1" aria-labelledby="exampleModalLabel"
+                    aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLabel">Hapus</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <!-- Content -->
+                                    <p>apakah anda akan menghapus <?= $key['nama_anak']; ?></p>
+                                    </form>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                    <div>
+                                        <a href="<?= base_url('/kader/deleteanak/'.$id) ?>"
+                                            class="btn btn-danger">Hapus</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
                     <!-- Edit Modal -->
                     <div class="modal fade" id="editmodal<?= $id; ?>" tabindex="-1" aria-labelledby="exampleModalLabel"
@@ -106,54 +153,37 @@
                                 </div>
                                 <div class="modal-body">
                                     <!-- Content -->
-                                    <form action="<?= base_url('/kader/editanak/' . $id); ?>" action="POST">
+                                    <form action="<?= base_url('/kader/editanak/' . $id); ?>" method="POST">
                                         <div class="form-group">
                                             <label for="formGroupExampleInput">Nama</label>
                                             <input type="text" class="form-control" id="nama" placeholder="masukan nama"
                                                 name="nama" value="<?= $key['nama_anak']; ?>">
                                         </div>
                                         <div class="form-group">
-                                            <div class="form-group">
-                                                <label for="exampleFormControlInput1">Tanggal Lahir</label>
-                                                <input type="date" class="form-control" id="date"
-                                                    placeholder="pilih tanggal" name="date">
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="formGroupExampleInput2">Umur</label>
-                                                <input type="number" class="form-control" id="umur"
-                                                    placeholder="masukan umur" name="umur" value="<?= $key['umur']; ?>">
-                                            </div>
-                                            <div class="form-group" hidden>
-                                                <label for="formGroupExampleInput2">No KK</label>
-                                                <input type="text" class="form-control" id="kk"
-                                                    placeholder="masukan no kk" name="no_kk"
-                                                    value="<?= $key['no_kk']; ?>">
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="formGroupExampleInput2">NIK</label>
-                                                <input type="text" class="form-control" id="nik"
-                                                    placeholder="masukan nik" name="nik" value="<?= $key['nik']; ?>">
-                                            </div>
-                                            <div class="modal-footer">
-                                                <button type="button" class="btn btn-secondary"
-                                                    data-dismiss="modal">Close</button>
-                                                <button type="submit" class="btn btn-primary">Submit</button>
-                                            </div>
+                                            <label for="exampleFormControlInput1">Tanggal Lahir</label>
+                                            <input type="date" class="tm form-control" id="date" data-date-format="YYYY-MM-DD" placeholder="YYYY-MM-DD" value="<?= $key['tanggal_lahir']; ?>"
+                                                placeholder="pilih tanggal" name="date">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="formGroupExampleInput2">Umur</label>
+                                            <input type="text" class="form-control" id="umur"
+                                                placeholder="masukan umur" name="umur" value="<?= $key['umur']; ?>">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="formGroupExampleInput2">NIK</label>
+                                            <input type="text" class="form-control" id="nik"
+                                                placeholder="masukan nik" name="nik" value="<?= $key['nik']; ?>">
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary"
+                                                data-dismiss="modal">Close</button>
+                                            <button type="submit" class="btn btn-primary">Submit</button>
+                                        </div>
                                     </form>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <!-- End Modal -->
-                    <div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog"
-                        aria-labelledby="myLargeModalLabel" aria-hidden="true" id="hapusmodal<?= $id; ?>">
-                        <div class="modal-dialog modal-lg">
-                            <div class="modal-content">
-                                ...
-                            </div>
-                        </div>
-                    </div>
-                    <!-- End Modal -->
                     <?php endforeach; ?>
                 </tbody>
             </table>
@@ -173,35 +203,33 @@
                 </div>
                 <div class="modal-body">
                     <!-- Content -->
-                    <form action="/kader/addanak" action="POST">
+                    <form action="/kader/addanak" method="POST">
                         <div class="form-group">
                             <label for="formGroupExampleInput">Nama</label>
                             <input type="text" class="form-control" id="nama" placeholder="masukan nama" name="nama">
                         </div>
                         <div class="form-group">
-                            <div class="form-group">
-                                <label for="exampleFormControlInput1">Tanggal Lahir</label>
-                                <input type="date" class="form-control" id="date" placeholder="pilih tanggal"
-                                    name="date">
-                            </div>
-                            <div class="form-group">
-                                <label for="formGroupExampleInput2">Umur</label>
-                                <input type="number" class="form-control" id="umur" placeholder="masukan umur"
-                                    name="umur">
-                            </div>
-                            <div class="form-group" hidden>
-                                <label for="formGroupExampleInput2">No KK</label>
-                                <input type="text" class="form-control" id="kk" placeholder="masukan no kk" name="no_kk"
-                                    value="<?= $key['no_kk']; ?>">
-                            </div>
-                            <div class="form-group">
-                                <label for="formGroupExampleInput2">NIK</label>
-                                <input type="text" class="form-control" id="nik" placeholder="masukan nik" name="nik">
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                <button type="submit" class="btn btn-primary">Submit</button>
-                            </div>
+                            <label for="exampleFormControlInput1">Tanggal Lahir</label>
+                            <input type="date" class="form-control" id="dateadd" placeholder="pilih tanggal" onchange="getAge()"
+                                name="date">
+                        </div>
+                        <div class="form-group">
+                            <label for="formGroupExampleInput2">Umur</label>
+                            <input type="text" name="umur" class="form-control" id="umuradd" placeholder="masukan umur" readonly >
+                        </div>
+                        <div class="form-group" hidden>
+                            <label for="formGroupExampleInput2">No KK</label>
+                            <input type="text" class="form-control" id="kk" placeholder="masukan no kk" name="id_k"
+                                value="<?= $orangtua[0]->id_keluarga ?>">
+                        </div>
+                        <div class="form-group">
+                            <label for="formGroupExampleInput2">NIK</label>
+                            <input type="text" class="form-control" id="nik" placeholder="masukan nik" name="nik">
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary">Submit</button>
+                        </div>
                     </form>
                 </div>
             </div>
@@ -219,12 +247,42 @@
     integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous">
 </script>
 <script src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.3/moment.min.js"></script>
 
 <script>
 $('#orangtua').DataTable();
-</script>
-<script>
+
 $('#anak').DataTable();
+  
+$(".tm").on("change", function() {
+    this.setAttribute(
+        "data-date",
+        moment(this.value, "YYYY-MM-DD")
+        .format( this.getAttribute("data-date-format") )
+    )
+}).trigger("change")
+
+function getAge() {
+    var dateString = document.getElementById("dateadd").value;
+    var today = new Date();
+    var birthDate = new Date(dateString);
+    var age = today.getFullYear() - birthDate.getFullYear();
+    var m = today.getMonth() - birthDate.getMonth();
+    var umur = "";
+    if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+        age--;
+    }
+    if (age >= 1) {
+        umur = age + " Tahun";   
+    }
+    if (m > 0) {
+        umur += " "+ m +" Bulan"
+    }else if(m < 0){
+        umur += " "+ (m + 12) +" Bulan"
+    }
+    
+    $("#umuradd").attr("value",umur);
+}
 </script>
 
 <!-- end content -->

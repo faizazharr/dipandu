@@ -8,10 +8,22 @@
 <div class="container-fluid">
     <div class="card shadow mb-4 mb-6">
         <div class="card-header py-3">
-            <h6 class="m-0 font-weight-bold text-dark">Jadwal Posiandu</h6>
+            <h6 class="m-0 font-weight-bold text-dark">Jadwal Posyandu</h6>
         </div>
         <div class="card-body">
             <!-- start  -->
+            <table border="0" cellspacing="5" cellpadding="5">
+                <tbody>
+                    <tr>
+                        <td>Minimum age:</td>
+                        <td><input type="date" data-date="" data-date-format="YYYY-MM-DD" class="date-range-filter" id="min" name="min"></td>
+                    </tr>
+                    <tr>
+                        <td>Maximum age:</td>
+                        <td><input type="date" data-date="" data-date-format="YYYY-MM-DD" class="date-range-filter" id="max" name="max"></td>
+                    </tr>
+                </tbody>
+            </table>
             <table id="example" class="display" style="width:100%">
                 <thead>
                     <tr>
@@ -53,8 +65,40 @@
     integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous">
 </script>
 <script src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>
+
+<script src="https://cdn.datatables.net/datetime/1.1.0/js/dataTables.dateTime.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+
+
 <script>
-$('#example').DataTable();
+    var table = $('#example').DataTable();
+    $.fn.dataTable.ext.search.push(
+        function(settings, data, dataIndex) {
+            var min = $('#min').val();
+            var max = $('#max').val();
+            var createdAt = data[2] || 0; // Our date column in the table
+
+            if (
+            (min == "" || max == "") ||
+            (moment(createdAt).isSameOrAfter(min) && moment(createdAt).isSameOrBefore(max))
+            ) {
+            return true;
+            }
+            return false;
+        }
+    );
+    
+    
+    $('.date-range-filter').change(function() {
+        table.draw();
+    });
+    $("input").on("change", function() {
+        this.setAttribute(
+            "data-date",
+            moment(this.value, "YYYY-MM-DD")
+            .format( this.getAttribute("data-date-format") )
+        )
+    }).trigger("change")
 </script>
 
 <!-- end content -->

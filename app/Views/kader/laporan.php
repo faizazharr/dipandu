@@ -10,73 +10,51 @@
     <!-- Page Heading -->
     <div class="card shadow mb-4 mb-6">
         <div class="card-header py-3">
-            <h6 class="m-0 font-weight-bold text-dark">Laporan bulanan</h6>
+            <h6 class="m-0 font-weight-bold text-dark">Rekap Perkembangan Anak</h6>
         </div>
         <div class="card-body">
             <!-- start form -->
-            <table id="laporan" class="display" style="width:100%">
-                <thead>
-                    <tr id="filters">
-                        <th></th>
-                        <th></th>
-                        <th></th>
+            <table border="0" cellspacing="5" cellpadding="5">
+                <tbody>
+                    <tr>
+                        <td>Minimum age:</td>
+                        <td><input type="date" data-date="" data-date-format="YYYY-MM-DD" class="date-range-filter" id="min" name="min"></td>
                     </tr>
                     <tr>
+                        <td>Maximum age:</td>
+                        <td><input type="date" data-date="" data-date-format="YYYY-MM-DD" class="date-range-filter" id="max" name="max"></td>
+                    </tr>
+                </tbody>
+            </table>
+            <table id="laporan" class="display" style="width:100%">
+                <thead>
+                    <tr>
                         <th>No</th>
-                        <th>Bulan</th>
-                        <th>Kegiatan</th>
                         <th>Tanggal</th>
                         <th>Nama</th>
                         <th>Berat</th>
                         <th>Tinggi</th>
                         <th>Lingkar Badan</th>
                         <th>Lingkar Kepala</th>
+                        <th>umur</th>
+                        <th>Ibu</th>
+                        <th>bapak</th>
                     </tr>
                 </thead>
                 <tbody>
                     <?php $i=1; ?>
-                    <?php foreach($laporan as $key) : ?>
-                    <?php 
-                            $oridate = $key['tanggal_kegiatan'];
-                            $timestamp = strtotime($oridate);
-                            $month = date('M',$timestamp);
-
-                            if ($month == "Jan") {
-                                $month = "Januari";
-                            } else if ($month == "Feb") {
-                                $month = "Februari";
-                            } else if ($month == "Mar") {
-                                $month = "Maret";
-                            } else if ($month == "Apr") {
-                                $month = "April";
-                            } else if ($month == "May") {
-                                $month = "Mei";
-                            } else if ($month == "Jun") {
-                                $month = "Juni";
-                            } else if ($month == "Jul") {
-                                $month = "Juli";
-                            } else if ($month == "Aug") {
-                                $month = "Agustus";
-                            } else if ($month == "Sep") {
-                                $month = "September";
-                            } else if ($month == "Oct") {
-                                $month = "Oktober";
-                            } else if ($month == "Nov") {
-                                $month = "November";
-                            } else if ($month == "Dec") {
-                                $month = "Desember";
-                            }
-                        ?>
+                    <?php foreach($laporan as $key) : ?>    
                     <tr>
                         <td><?= $i++; ?></td>
-                        <td><?= $key['jenis_kegiatan']; ?></td>
-                        <td><?= $month ?></td>
-                        <td><?= $key['tanggal_kegiatan']; ?></td>
+                        <td><?= $key['tanggal_posiandu']; ?></td>
                         <td><?= $key['nama_anak']; ?></td>
                         <td><?= $key['berat']; ?> kg</td>
                         <td><?= $key['tinggi']; ?> cm</td>
                         <td><?= $key['lingkarbadan']; ?> cm</td>
                         <td><?= $key['lingkarkepala']; ?> cm</td>
+                        <td><?= $key['umur']; ?></td>
+                        <td><?= $key['ibu']; ?></td>
+                        <td><?= $key['bapak']; ?></td>
                     </tr>
                     <?php endforeach; ?>
                 </tbody>
@@ -103,47 +81,46 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
 <script src="https://cdn.datatables.net/buttons/1.7.0/js/buttons.html5.min.js"></script>
 <script src="https://cdn.datatables.net/buttons/1.7.0/js/buttons.print.min.js"></script>
-
+<script src="https://cdn.datatables.net/datetime/1.1.0/js/dataTables.dateTime.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
 
 <script>
-$('#laporan').DataTable({
-    dom: 'Bfrtip',
-    buttons: [
-        'pdf'
-    ],
-    initComplete: function() {
-        this.api().columns().every(function() {
-            var column = this;
-            if (column.index() == 0) {
-                input = $('<input type="text" placeholder="cari nomor"/ hidden>').appendTo($(column
-                    .header())).on(
-                    'keyup change',
-                    function() {
-                        if (column.search() !== this.value) {
-                            column.search(this.value)
-                                .draw();
-                        }
-                    });
-                return;
+    var table = $('#laporan').DataTable({
+        dom: 'Bfrtip',
+        buttons: [{
+            extend: 'pdf',
+            text: 'Cetak'
+        }
+
+        ],
+    });
+    $.fn.dataTable.ext.search.push(
+        function(settings, data, dataIndex) {
+            var min = $('#min').val();
+            var max = $('#max').val();
+            var createdAt = data[1] || 0; // Our date column in the table
+
+            if (
+            (min == "" || max == "") ||
+            (moment(createdAt).isSameOrAfter(min) && moment(createdAt).isSameOrBefore(max))
+            ) {
+            return true;
             }
-
-            var select = $('<select><option value="">Filter Data</option></select>')
-                .appendTo($("#filters").find("th").eq(column.index()))
-                .on('change', function() {
-                    var val = $.fn.dataTable.util.escapeRegex(
-                        $(this).val());
-
-                    column.search(val ? '^' + val + '$' : '', true, false)
-                        .draw();
-                });
-
-            console.log(select);
-            column.data().unique().sort().each(function(d, j) {
-                select.append('<option value="' + d + '">' + d + '</option>')
-            });
-        });
-    }
-});
+            return false;
+        }
+    );
+    
+    
+    $('.date-range-filter').change(function() {
+        table.draw();
+    });
+    $("input").on("change", function() {
+        this.setAttribute(
+            "data-date",
+            moment(this.value, "YYYY-MM-DD")
+            .format( this.getAttribute("data-date-format") )
+        )
+    }).trigger("change")
 </script>
 
 <!-- end content -->

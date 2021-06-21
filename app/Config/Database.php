@@ -36,7 +36,7 @@ class Database extends \CodeIgniter\Database\Config
 		'hostname' => 'localhost',
 		'username' => 'root',
 		'password' => '',
-		'database' => 'dbdipandu',
+		'database' => 'dbdipandu22',
 		'DBDriver' => 'mysqli',
 		'DBPrefix' => '',
 		'pConnect' => false,

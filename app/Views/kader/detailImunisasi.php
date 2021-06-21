@@ -29,10 +29,16 @@
                         <td><?= $i++; ?></td>
                         <td><?= $key['nama_anak']; ?></td>
                         <td>
-                            <a href="" class="btn btn-primary btn-circle" data-toggle="modal"
-                                data-target="#editmodal<?= $id; ?>" data-whatever="@mdo">
-                                <i class="fas fa-stethoscope"></i>
-                            </a>
+                            <?php if ($key['is_imunisasi'] == 0) { ?>
+                                <a class="btn btn-primary btn-circle" data-toggle="modal"
+                                    data-target="#editmodal<?= $id; ?>" data-whatever="@mdo">
+                                    <i class="fas fa-stethoscope"></i>
+                                </a>
+                            <?php } else { ?>
+                                <a class="btn btn-success btn-circle">
+                                    <i class="fas fa-stethoscope"></i>
+                                </a>
+                            <?php }?>
                         </td>
                     </tr>
                     <!-- Edit Modal -->
@@ -42,7 +48,7 @@
                             <div class="modal-content">
                                 <div class="modal-header">
                                     <h5 class="modal-title" id="exampleModalLabel">Pemeriksaan
-                                        <?= $key['nama_imunisasi']; ?></h5>
+                                        <?= $imunisasi; ?></h5>
                                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                         <span aria-hidden="true">&times;</span>
                                     </button>
@@ -52,22 +58,16 @@
                                     <form action="/kader/periksaimunisasi" method="POST">
                                         <div class="form-group">
                                             <label for="formGroupExampleInput">Nama Anak</label>
-                                            <input type="text" class="form-control" id="nama" name="nama"
+                                            <input type="text" class="form-control" id="nama" name="nama" readonly
                                                 value="<?= $key['nama_anak']; ?>">
                                         </div>
                                         <div class="row">
                                             <div class="col-6">
                                                 <div class="form-group">
-                                                    <label for="formGroupExampleInput">Id anak</label>
-                                                    <input type="text" class="form-control" id="id_anak" name="id_anak"
-                                                        value="<?= $key['id_anak']; ?>">
-                                                </div>
-                                            </div>
-                                            <div class="col-6">
-                                                <div class="form-group">
                                                     <label for="formGroupExampleInput">No KK</label>
-                                                    <input type="text" class="form-control" id="no_kk" name="no_kk"
-                                                        value="<?= $key['no_kk']; ?>">
+                                                    <input type="hidden" class="form-control"  id="id_anak" name="id_anak" value="<?= $key['id']; ?>">
+                                                    <input type="hidden" class="form-control"  id="id_anak" name="idpemeriksaan" value="<?= $id; ?>">
+                                                    <input type="text" class="form-control" readonly id="no_kk" name="no_kk" value="<?= $key['no_kk']; ?>">
                                                 </div>
                                             </div>
                                         </div>
@@ -76,15 +76,15 @@
                                                 <div class="form-group">
                                                     <label for="formGroupExampleInput">Tanggal Imunisasi</label>
                                                     <input type="text" class="form-control" id="tanggal_imunisasi"
-                                                        name="tanggal_imunisasi"
-                                                        value="<?= $key['tanggal_imunisasi']; ?>">
+                                                        name="tanggal_imunisasi" readonly
+                                                        value="<?= $tanggal; ?>">
                                                 </div>
                                             </div>
                                             <div class="col-6">
                                                 <div class="form-group">
                                                     <label for="formGroupExampleInput">Nama Imunisasi</label>
-                                                    <input type="text" class="form-control" id="nama_imunisasi"
-                                                        name="nama_imunisasi" value="<?= $key['nama_imunisasi']; ?>">
+                                                    <input type="text" class="form-control" id="nama_imunisasi" readonly
+                                                        name="nama_imunisasi" value="<?= $imunisasi; ?>">
                                                 </div>
                                             </div>
                                         </div>
@@ -97,61 +97,6 @@
                                                         placeholder="Masukan jenis vitamin">
                                                 </div>
                                             </div>
-                                        </div>
-
-                                        <div class="row">
-                                            <div class="col-6">
-                                                <div class="form-group">
-                                                    <label for="formGroupExampleInput">Berat</label>
-                                                    <div class="input-group">
-                                                        <input type="number" class="form-control" id="berat"
-                                                            name="berat" placeholder="masukan berat anak">
-                                                        <span class="input-group-text" id="basic-addon2">kg</span>
-                                                    </div>
-
-                                                </div>
-                                            </div>
-                                            <div class="col-6">
-                                                <div class="form-group">
-                                                    <label for="formGroupExampleInput">Tinggi</label>
-                                                    <div class="input-group">
-                                                        <div class="input-group">
-                                                            <input type="number" class="form-control" id="tinggi"
-                                                                name="tinggi" placeholder="masukan tinggi anak">
-                                                            <span class="input-group-text" id="basic-addon2">cm</span>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-6">
-                                                <div class="form-group">
-                                                    <label for="formGroupExampleInput">Lingkar Badan</label>
-                                                    <div class="input-group">
-                                                        <input type="number" class="form-control" id="lingkarbadan"
-                                                            name="lingkarbadan" placeholder="masukan linkar badan">
-                                                        <span class="input-group-text" id="basic-addon2">cm</span>
-                                                    </div>
-                                                </div>
-
-                                            </div>
-                                            <div class="col-6">
-                                                <div class="form-group">
-                                                    <label for="formGroupExampleInput">Lingkar Kepala</label>
-                                                    <div class="input-group">
-                                                        <input type="number" class="form-control" id="lingkarkepala"
-                                                            name="lingkarkepala" placeholder="masukan lingkar kepala">
-                                                        <span class="input-group-text" id="basic-addon2">cm</span>
-                                                    </div>
-
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="exampleFormControlTextarea1">Tambahkan catatan</label>
-                                            <textarea class="form-control" id="catatan" name="catatan"
-                                                rows="4"></textarea>
                                         </div>
                                         <div class="modal-footer">
                                             <button type="button" class="btn btn-secondary"

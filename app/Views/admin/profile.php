@@ -12,20 +12,20 @@
                 <tbody>
                     <tr>
                         <td>Nama</td>
-                        <td><?php echo session()->get('user_name'); ?></td>
+                        <td><?php echo $data['user_name'] ?></td>
                     </tr>
                     <tr>
                         <td>Email</td>
-                        <td><?php echo session()->get('user_email'); ?></td>
+                        <td><?php echo $data['user_email'] ?></td>
 
                     </tr>
                     <tr>
                         <td>Nik</td>
-                        <td><?php echo session()->get('user_nik'); ?></td>
+                        <td><?php echo $data['user_nik'] ?></td>
                     </tr>
                     <tr>
                         <td>Alamat</td>
-                        <td><?php echo session()->get('user_alamat'); ?></td>
+                        <td><?php echo $data['user_alamat'] ?></td>
                     </tr>
                     <tr>
                         <td colspan="2">

@@ -12,7 +12,7 @@ class ImunisasiModel extends Model
 
     public function saveData($data)
     {
-        $query = $this->db->table($this->table)->insert($data);
-        return $query;
+        $this->insert($data);
+        return $this->insertID();
     }
 }

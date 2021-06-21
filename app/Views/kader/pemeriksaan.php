@@ -6,7 +6,11 @@
 <link rel="stylesheet" href="https://cdn.datatables.net/1.10.22/css/jquery.dataTables.min.css">
 <!-- content -->
 <div class="container-fluid">
-
+    <?php if (!empty(session()->getFlashdata('tambah'))) { ?>
+        <div class="alert alert-success">
+            <?php echo session()->getFlashdata('tambah') ?>
+        </div>
+    <?php } ?>
     <div class="card shadow mb-4 mb-6">
         <div class="card-header py-3">
             <h6 class="m-0 font-weight-bold text-dark">Daftar anak</h6>
@@ -42,7 +46,7 @@
                             <div class="modal-content">
                                 <div class="modal-header">
                                     <h5 class="modal-title" id="exampleModalLabel">Pemeriksaan
-                                        Posiandu</h5>
+                                        Posyandu</h5>
                                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                         <span aria-hidden="true">&times;</span>
                                     </button>
@@ -52,21 +56,15 @@
                                     <form action="/kader/periksaposiandu" method="POST">
                                         <div class="form-group">
                                             <label for="formGroupExampleInput">Nama Anak</label>
-                                            <input type="text" class="form-control" id="nama" name="nama"
+                                            <input type="text" class="form-control" id="nama" name="nama" readonly
                                                 value="<?= $key['nama_anak']; ?>">
                                         </div>
                                         <div class="row">
                                             <div class="col-6">
                                                 <div class="form-group">
-                                                    <label for="formGroupExampleInput">Id anak</label>
-                                                    <input type="text" class="form-control" id="id_anak" name="id_anak"
-                                                        value="<?= $key['id_anak']; ?>">
-                                                </div>
-                                            </div>
-                                            <div class="col-6">
-                                                <div class="form-group">
                                                     <label for="formGroupExampleInput">No KK</label>
-                                                    <input type="text" class="form-control" id="no_kk" name="no_kk"
+                                                    <input type="hidden" class="form-control" id="id_anak" name="id_anak" value="<?= $key['id']; ?>">
+                                                    <input type="text" class="form-control" id="no_kk" name="no_kk" readonly
                                                         value="<?= $key['no_kk']; ?>">
                                                 </div>
                                             </div>
@@ -75,9 +73,14 @@
                                             <div class="col-6">
                                                 <div class="form-group">
                                                     <label for="formGroupExampleInput">Tanggal Posiandu</label>
-                                                    <input type="text" class="form-control" id="tanggal_imunisasi"
-                                                        name="tanggal_posiandu"
-                                                        value="<?= $key['tanggal_posiandu']; ?>">
+                                                        <select class="form-control" name="tanggal_posiandu" id="tanggal_posiandu">
+                                                            <?php foreach ($jadwal as $k) { 
+                                                                $mulai = date('H:i', strtotime($k['waktu_mulai']));
+                                                                $selesai = date('H:i', strtotime($k['waktu_selesai']));
+                                                                ?>
+                                                                <option value="<?= $k['id']?>"><?= $k['tanggal_posiandu']."  ".$mulai." - ".$selesai?></option>                                                                
+                                                            <?php }?>
+                                                        </select>
                                                 </div>
                                             </div>
                                         </div>

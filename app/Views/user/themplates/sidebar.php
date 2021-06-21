@@ -22,7 +22,7 @@
     <li class="nav-item">
         <a class="nav-link" href="<?= base_url('user')  ?>">
             <i class="fas fa-book"></i>
-            <span>Panduan Posiandu</span></a>
+            <span>Panduan Posyandu</span></a>
     </li>
 
 
@@ -38,7 +38,7 @@
     <li class="nav-item">
         <a class="nav-link" href="<?= base_url('user/jadwalimunisasi')  ?>">
             <i class="fas fa-calendar-times"></i>
-            <span>Jadwal Imunisasi</span></a>
+            <span>History Imunisasi Anak</span></a>
     </li>
 
 
@@ -46,7 +46,7 @@
     <li class="nav-item">
         <a class="nav-link" href="<?= base_url('user/jadwalposyandu')  ?>">
             <i class="fas fa-calendar-times"></i>
-            <span>Jadwal Posiandu</span></a>
+            <span>Jadwal Posyandu</span></a>
     </li>
 
     <!-- Nav Item -->

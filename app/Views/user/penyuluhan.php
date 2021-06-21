@@ -17,6 +17,7 @@
                     <tr>
                         <th>Kegiatan Penyuluhan</th>
                         <th>Tanggal Penyuluhan</th>
+                        <th>Catatan</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -28,6 +29,7 @@
                         <tr>
                             <td><?= $key['kegiatan'] ?></td>
                             <td><?= $key['date'] ?></td>
+                            <td><?= $key['catatan'] ?></td>
                         </tr>
                     <?php endforeach ?>
                 </tbody>

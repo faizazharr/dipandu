@@ -6,31 +6,7 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/datepicker/1.0.10/datepicker.min.js">
 <!-- content -->
 <div class="container-fluid">
-    <!-- Flash Data -->
-    <?php
-            if (!empty(session()->getFlashdata('tambah'))) { ?>
-    <div class="alert alert-success">
-        <?php echo session()->getFlashdata('tambah') ?>
-    </div>
-    <?php } ?>
-    <!-- End Flash Data -->
-
-    <!-- Flash Data -->
-    <?php
-            if (!empty(session()->getFlashdata('edit'))) { ?>
-    <div class="alert alert-success">
-        <?php echo session()->getFlashdata('edit') ?>
-    </div>
-    <?php } ?>
-    <!-- End Flash Data -->
-
-    <?php
-            if (!empty(session()->getFlashdata('hapus'))) { ?>
-    <div class="alert alert-success">
-        <?php echo session()->getFlashdata('hapus') ?>
-    </div>
-    <?php } ?>
-    <!-- End Flash Data -->
+    
 
     <div class="card shadow mb-4 mb-6">
         <div class="card-header py-3">
@@ -50,10 +26,10 @@
                 </thead>
                 <tbody>
                     <?php $i = 1 ?>
-                    <?php foreach($user as $key => $value) : $slug = $value->user_kk?>
+                    <?php foreach($user as $key => $value) : $slug = $value->id_keluarga?>
                     <tr>
                         <td><?= $i++; ?></td>
-                        <td><?= $value->user_kk; ?></td>
+                        <td><?= $value->no_kk; ?></td>
                         <td>
                             <a href="/kader/detailkeluarga/<?= $slug; ?>" class="btn btn-primary btn-circle">
                                 <i class="fas fa-list"></i>

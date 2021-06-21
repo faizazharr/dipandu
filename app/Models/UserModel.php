@@ -37,7 +37,12 @@ class UserModel extends Model
     public function getOrangtua()
     {
         $level = 4;
-        $data = $this->db->table($this->table)->getWhere(['level' => $level])->getResultObject();
+        $data = $this->db->table($this->table)->join('keluarga', 'user.id_keluarga = keluarga.id')->groupBy('user.id_keluarga')->getWhere(['level' => $level])->getResultObject();
+        return $data;
+    }
+    public function getOrangtuaId($id)
+    {
+        $data = $this->db->table($this->table)->join('keluarga', 'user.id_keluarga = keluarga.id')->getWhere(['user.id' => $id])->getResultArray();
         return $data;
     }
 

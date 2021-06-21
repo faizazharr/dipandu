@@ -1,16 +1,16 @@
 <?php
 
 namespace App\Controllers;
+use App\Controllers\BaseController;
 
 use App\Models\ArtikelModel;
 use App\Models\PenyuluhanModel;
 use App\Models\AnakModel;
 use App\Models\ImunisasiModel;
-use App\Models\PemeriksaanImunisasiModel;
-use App\Models\PemeriksaanposianduModel;
+use App\Models\PemeriksaanposyanduModel;
 use App\Models\PesanModel;
 use App\Models\PosianduModel;
-
+use App\Models\UserModel;
 
 class User extends BaseController
 {
@@ -18,21 +18,25 @@ class User extends BaseController
     protected $penyuluhanmodel;
     protected $anakmodel;
     protected $imunisasiModel;
-    protected $PemeriksaanImunisasiModel;
     protected $PesanModel;
     protected $PosianduModel;
-    protected $PemeriksaanposianduModel;
+    protected $PemeriksaanposyanduModel;
 
     public function __construct()
     {
+        $view = \Config\Services::renderer();
         $this->artikelmodel = new ArtikelModel();
         $this->penyuluhanmodel = new PenyuluhanModel();
         $this->anakmodel = new AnakModel();
         $this->imunisasiModel = new ImunisasiModel();
-        $this->PemeriksaanImunisasiModel = new PemeriksaanImunisasiModel();
+        $this->PemeriksaanposyanduModel = new PemeriksaanposyanduModel();
         $this->PesanModel = new PesanModel();
         $this->PosianduModel = new PosianduModel();
-        $this->PemeriksaanposianduModel = new PemeriksaanposianduModel();
+        $this->userModel = new UserModel();
+        $data = [
+            'totalpesan' => $this->PesanModel->totalMessage(session()->get('id'))
+        ];
+        $view->setData($data);
     }
 
     public function index()
@@ -41,26 +45,29 @@ class User extends BaseController
             session()->setFlashdata('warning', 'Anda Belum Login !');
             return redirect()->to(base_url('/home/index'));
         }
+        $posiandu = $this->PosianduModel->orderBy('tanggal_posiandu', 'DESC')->findAll();
 
         $artikel = $this->artikelmodel->findAll();
 
         $data = [
             'title' => "Panduan Posyandu",
-            'artikel' => $artikel
+            'artikel' => $artikel,
+            'posiandu' => $posiandu
         ];
         return view('user/index', $data);
     }
 
     public function profile()
     {
-        $data = ['title' => "Profile"];
+        $data = ['title' => "Profile",
+                'data' =>  $this->userModel->getOrangtuaId(session()->get('id'))];
         return view('user/profile', $data);
     }
 
     public function perkembangan()
     {
-        $kk = session()->get('user_kk');
-        $anak = $this->anakmodel->where('no_kk', $kk)->findAll();
+        $kk = session()->get('id_keluarga');
+        $anak = $this->anakmodel->where('id_keluarga', $kk)->findAll();
         $data = [
             'title' => "Perkembangan Anak",
             'anak' => $anak
@@ -70,12 +77,12 @@ class User extends BaseController
 
     public function jadwalimunisasi()
     {
-        $kk = session()->get('user_kk');
-        $imunisasi = $this->imunisasiModel->findAll();
-        $pemeriksaan = $this->PemeriksaanImunisasiModel->where('no_kk',$kk)->findAll();
+        $id = session()->get('id_keluarga');
+        // $imunisasi = $this->imunisasiModel->findAll();
+        $pemeriksaan = $this->anakmodel->getImunisasiAnak($id);
         $data = [
-            'title' => "Jadwal Imunisasi",
-            'imunisasi' => $imunisasi,
+            'title' => "Daftar Imunisasi",
+            // 'imunisasi' => $imunisasi,
             'pemeriksaan' => $pemeriksaan
         ];
         return view('user/jadwalimunisasi', $data);
@@ -83,7 +90,7 @@ class User extends BaseController
 
     public function jadwalposyandu()
     {
-        $posiandu = $this->PosianduModel->findAll();
+        $posiandu = $this->PosianduModel->orderBy('tanggal_posiandu', 'DESC')->findAll();
         $data = [
             'title' => "Jadwal Posiandu",
             'posiandu' => $posiandu
@@ -115,22 +122,36 @@ class User extends BaseController
 
     public function edit_profile()
     {
-        $data = ['title' => "Edit Profile"];
+        $data = ['title' => "Edit Profile",
+                'data' => $this->userModel->find(session()->get('id'))];
         return view('user/editprofile', $data);
     }
 
     public function editProfile($id)
     {
-        $data = array(
-            'id' => $id,
-            'user_email' => $this->request->getVar('email'),
-            'user_name' => $this->request->getVar('username'),
-            'user_password' => $this->request->getVar('password'),
-            'user_alamat' => $this->request->getVar('alamat'),
-            'user_kk' => $this->request->getVar('kk'),
-            'user_nik' => $this->request->getVar('nik')
-        );
-        // dd($data);
+        if ($this->request->getVar('password') != null) {
+            $data = array(
+                'id' => $id,
+                'user_email' => $this->request->getVar('email'),
+                'user_name' => $this->request->getVar('username'),
+                'user_password' => $this->request->getVar('password'),
+                'user_alamat' => $this->request->getVar('alamat'),
+                'user_kk' => $this->request->getVar('kk'),
+                'user_nik' => $this->request->getVar('nik')
+            );
+            
+        }else{
+            $data = array(
+                'id' => $id,
+                'user_email' => $this->request->getVar('email'),
+                'user_name' => $this->request->getVar('username'),
+                'user_alamat' => $this->request->getVar('alamat'),
+                'user_kk' => $this->request->getVar('kk'),
+                'user_nik' => $this->request->getVar('nik')
+            );
+            
+        }
+        
         $this->userModel->save($data);
         session()->setFlashdata('berhasil', 'Berhasil mengubah profile , untuk melihat perubahan harap logout terlebih dahulu. ');
         return redirect()->to(base_url('user/edit_Profile'));
@@ -138,7 +159,7 @@ class User extends BaseController
 
     public function detail($id)
     {
-        $detail = $this->PemeriksaanposianduModel->where('id_anak',$id)->findAll();
+        $detail = $this->PemeriksaanposyanduModel->getPerkembangan($id);
         $data = [
             'title' => "Detail Anak",
             'detail' => $detail

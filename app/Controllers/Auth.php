@@ -65,47 +65,40 @@ class Auth extends BaseController
         // 1 : admin
         // 2 : bidan
         // 3 : kader
-
         // Cek validasi data login untuk masing masing role
-        if (($cek['user_email'] == $email) && ($cek['user_password'] == $password)) {
-            if ($cek['level'] == 4) {
-                session()->set('user_email', $cek['user_email']);
-                session()->set('user_name', $cek['user_name']);
-                session()->set('id', $cek['id']);
-                session()->set('level', $cek['level']);
-                session()->set('user_alamat', $cek['user_alamat']);
-                session()->set('user_nik', $cek['user_nik']);
-                session()->set('user_kk', $cek['user_kk']);
-                session()->set('user_phone', $cek['user_phone']);
-                return redirect()->to(base_url('user'));
-            } else if ($cek['level'] == 1) {
-                session()->set('user_email', $cek['user_email']);
-                session()->set('user_name', $cek['user_name']);
-                session()->set('id', $cek['id']);
-                session()->set('level', $cek['level']);
-                session()->set('user_alamat', $cek['user_alamat']);
-                session()->set('user_nik', $cek['user_nik']);
-                return redirect()->to(base_url('admin'));
-            } else if ($cek['level'] == 2) {
-                session()->set('user_email', $cek['user_email']);
-                session()->set('user_name', $cek['user_name']);
-                session()->set('id', $cek['id']);
-                session()->set('level', $cek['level']);
-                session()->set('user_alamat', $cek['user_alamat']);
-                session()->set('user_nik', $cek['user_nik']);
-                session()->set('user_phone', $cek['user_phone']);
-                return redirect()->to(base_url('bidan'));
-            } else if ($cek['level'] == 3) {
-                session()->set('user_email', $cek['user_email']);
-                session()->set('user_name', $cek['user_name']);
-                session()->set('id', $cek['id']);
-                session()->set('level', $cek['level']);
-                session()->set('user_alamat', $cek['user_alamat']);
-                session()->set('user_nik', $cek['user_nik']);
-                session()->set('user_phone', $cek['user_phone']);
-                return redirect()->to(base_url('kader'));
+        if ($cek != null) {
+            if (($cek['user_email'] == $email) && ($cek['user_password'] == $password)) {
+                if ($cek['level'] == 4) {
+                    session()->set('user_email', $cek['user_email']);
+                    session()->set('user_name', $cek['user_name']);
+                    session()->set('id', $cek['id']);
+                    session()->set('level', $cek['level']);
+                    session()->set('id_keluarga', $cek['id_keluarga']);
+                    return redirect()->to(base_url('user'));
+                } else if ($cek['level'] == 1) {
+                    session()->set('user_email', $cek['user_email']);
+                    session()->set('user_name', $cek['user_name']);
+                    session()->set('id', $cek['id']);
+                    session()->set('level', $cek['level']);
+                    return redirect()->to(base_url('admin'));
+                } else if ($cek['level'] == 2) {
+                    session()->set('user_email', $cek['user_email']);
+                    session()->set('user_name', $cek['user_name']);
+                    session()->set('id', $cek['id']);
+                    session()->set('level', $cek['level']);
+                    return redirect()->to(base_url('bidan'));
+                } else if ($cek['level'] == 3) {
+                    session()->set('user_email', $cek['user_email']);
+                    session()->set('user_name', $cek['user_name']);
+                    session()->set('id', $cek['id']);
+                    session()->set('level', $cek['level']);
+                    return redirect()->to(base_url('kader'));
+                }
+            } else {
+                session()->setFlashdata('gagal', 'username / password salah');
+                return redirect()->to(base_url('/home/index'));
             }
-        } else {
+        }else {
             session()->setFlashdata('gagal', 'username / password salah');
             return redirect()->to(base_url('/home/index'));
         }

@@ -9,4 +9,6 @@ class DetailPosianduModel extends Model
     protected $table = 'detail_posiandu';
     protected $primaryKey = 'id';
     protected $allowedFields = ['nama_anak','tanggal_posiandu' ,'id_anak' , 'no_kk'];
+
+    
 }

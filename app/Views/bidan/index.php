@@ -57,6 +57,7 @@
                         <th>Id</th>
                         <th>Kegiatan Penyuluhan</th>
                         <th>Tanggal Penyluhan</th>
+                        <th>Catatan</th>
                         <th>Action</th>
                     </tr>
                 </thead>
@@ -69,6 +70,7 @@
                         <td><?= $k['id']; ?></td>
                         <td><?= $k['kegiatan']; ?></td>
                         <td><?= $k['date']; ?></td>
+                        <td><?= $k['catatan']; ?></td>
                         <td>
                             <a href="" class="btn btn-success btn-circle" data-toggle="modal"
                                 data-target="#editmodal<?= $id ?>" data-whatever="@mdo">
@@ -120,7 +122,7 @@
                                 </div>
                                 <div class="modal-body">
                                     <!-- Content -->
-                                    <form action="<?= base_url('/bidan/editpenyuluhan/' . $id); ?>" action="POST">
+                                    <form action="<?= base_url('/bidan/editpenyuluhan/' . $id); ?>" method="POST">
                                         <div class="form-group">
                                             <label for="kegiatan" class="col-form-label">Nama kegiatan</label>
                                             <input type="text" id="kegiatan" class="form-control" name="kegiatan"
@@ -129,7 +131,12 @@
                                         <div class="form-group">
                                             <label for="tanggal" class="col-form-label">Tanggal kegiatan</label>
                                             <input type="date" class="form-control" id="date"
-                                                placeholder="pilih tanggal" name="date">
+                                                placeholder="pilih tanggal" name="date" value="<?= $k['date']; ?>">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="tanggal" class="col-form-label">Catatan</label>
+                                            <textarea class="form-control" id="catatan" name="catatan"
+                                                rows="4"><?= $k['catatan']; ?></textarea>
                                         </div>
                                         <div class="modal-footer">
                                             <button type="button" class="btn btn-secondary"
@@ -170,6 +177,11 @@
                         <div class="form-group">
                             <label for="tanggal" class="col-form-label">Tanggal kegiatan</label>
                             <input type="date" class="form-control" id="date" placeholder="pilih tanggal" name="date">
+                        </div>
+                        <div class="form-group">
+                            <label for="tanggal" class="col-form-label">Catatan</label>
+                            <textarea class="form-control" id="catatan" name="catatan"
+                                rows="4"></textarea>
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>

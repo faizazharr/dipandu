@@ -19,7 +19,7 @@
 
     <div class="card shadow mb-4 mb-6">
         <div class="card-header py-3">
-            <h6 class="m-0 font-weight-bold text-dark">Jadwal Posiandu</h6>
+            <h6 class="m-0 font-weight-bold text-dark">Jadwal Posyandu</h6>
         </div>
         <div class="card-body">
 
@@ -40,7 +40,18 @@
             </div>
             <?php } ?>
             <!-- End Flash Data -->
-
+            <table border="0" cellspacing="5" cellpadding="5">
+                <tbody>
+                    <tr>
+                        <td>Minimum age:</td>
+                        <td><input type="date" data-date="" data-date-format="YYYY-MM-DD" class="date-range-filter" id="min" name="min"></td>
+                    </tr>
+                    <tr>
+                        <td>Maximum age:</td>
+                        <td><input type="date" data-date="" data-date-format="YYYY-MM-DD" class="date-range-filter" id="max" name="max"></td>
+                    </tr>
+                </tbody>
+            </table>
             <!-- start form -->
             <table id="example" class="display" style="width:100%">
                 <thead>
@@ -55,6 +66,7 @@
                 <tbody>
                     <?php $i = 1; ?>
                     <?php foreach($posiandu as $key) :  ?>
+
                     <?php 
                         $id = $key['id'];
                         $slug = $key['tanggal_posiandu'];
@@ -70,10 +82,6 @@
                         <td><?= $key['tanggal_posiandu']; ?></td>
                         <td><?= $mulai ?> - <?= $selesai ?></td>
                         <td>
-                            <a href="<?= base_url('kader/detailposiandu/'. $slug); ?>"
-                                class="btn btn-primary btn-circle">
-                                <i class="fas fa-list"></i>
-                            </a>
                             <a href="" class="btn btn-success btn-circle" data-toggle="modal"
                                 data-target="#editmodal<?= $id; ?>" data-whatever="@mdo">
                                 <i class="fas fa-edit"></i>
@@ -98,18 +106,18 @@
                                 <div class="modal-body">
                                     <form action="<?= base_url('kader/editposiandu/' . $id); ?>" method="POST">
                                         <div class="form-group">
-                                            <label for="exampleFormControlInput1">Tanggal Posiandu</label>
-                                            <input type="date" class="form-control" id="date"
+                                            <label for="exampleFormControlInput1">Tanggal Posyandu</label>
+                                            <input type="date" class="form-control" id="date" value="<?= $key['tanggal_posiandu']?>"
                                                 placeholder="pilih tanggal" name="date">
                                         </div>
                                         <div class="form-group">
                                             <label for="exampleFormControlInput1">Waktu Mulai</label>
-                                            <input type="time" class="form-control" id="timepicker"
+                                            <input type="time" class="form-control" id="timepicker" value="<?= $mulai?>"
                                                 placeholder="waktu mulai" name="w_mulai">
                                         </div>
                                         <div class="form-group">
                                             <label for="exampleFormControlInput1">Waktu Selesai</label>
-                                            <input type="time" class="form-control" id="timepicker"
+                                            <input type="time" class="form-control" id="timepicker" value="<?= $selesai?>"
                                                 placeholder="waktu selesai" name="w_selesai">
                                         </div>
                                         <div class="modal-footer">
@@ -205,9 +213,38 @@
     integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous">
 </script>
 <script src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/datetime/1.1.0/js/dataTables.dateTime.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
 
 <script>
-$('#example').DataTable();
+var table = $('#example').DataTable();
+$.fn.dataTable.ext.search.push(
+        function(settings, data, dataIndex) {
+            var min = $('#min').val();
+            var max = $('#max').val();
+            var createdAt = data[2] || 0; // Our date column in the table
+
+            if (
+            (min == "" || max == "") ||
+            (moment(createdAt).isSameOrAfter(min) && moment(createdAt).isSameOrBefore(max))
+            ) {
+            return true;
+            }
+            return false;
+        }
+    );
+    
+    
+    $('.date-range-filter').change(function() {
+        table.draw();
+    });
+    $("input").on("change", function() {
+        this.setAttribute(
+            "data-date",
+            moment(this.value, "YYYY-MM-DD")
+            .format( this.getAttribute("data-date-format") )
+        )
+    }).trigger("change")
 </script>
 
 <!-- end content -->

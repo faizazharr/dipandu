@@ -58,8 +58,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <?php foreach($detail as $key) :
-                        $i = 1;
+                    <?php $i = 1; foreach($detail as $key):
                         ?>
                     <tr>
                         <td><?= $i++; ?></td>
@@ -97,6 +96,7 @@
 </script>
 <script>
 $('#example').DataTable();
+$('#example2').DataTable();
 </script>
 
 <script>

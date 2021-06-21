@@ -46,21 +46,27 @@
     <li class="nav-item">
         <a class="nav-link" href="<?= base_url('kader/jadwalimunisasi')  ?>">
             <i class="fas fa-calendar-times"></i>
-            <span>Jadwal Imunisasi</span></a>
+            <span>Daftar Imunisasi</span></a>
     </li>
 
     <!-- Nav Item -->
     <li class="nav-item">
         <a class="nav-link" href="<?= base_url('kader/jadwalposyandu')  ?>">
             <i class="fas fa-file-alt"></i>
-            <span>Jadwal Posiandu</span></a>
+            <span>Jadwal Posyandu</span></a>
+    </li>
+    
+    <li class="nav-item">
+        <a class="nav-link" href="<?= base_url('kader/pemeriksaan')  ?>">
+            <i class="fas fa-file-alt"></i>
+            <span>Pemeriksaan</span></a>
     </li>
 
     <!-- Nav Item -->
     <li class="nav-item">
         <a class="nav-link" href="<?= base_url('kader/laporan')  ?>">
             <i class="fas fa-file-alt"></i>
-            <span>Laporan Bulanan</span></a>
+            <span>Rekap Perkembangan Anak</span></a>
     </li>
 
     <!-- Heading -->

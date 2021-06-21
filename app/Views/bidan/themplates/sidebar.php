@@ -36,7 +36,7 @@
     <li class="nav-item">
         <a class="nav-link" href="<?= base_url('bidan/laporan')  ?>">
             <i class="fas fa-database"></i>
-            <span>Laporan</span></a>
+            <span>Rekap Perkembangan Anak</span></a>
     </li>
 
     <!-- Nav Item -->

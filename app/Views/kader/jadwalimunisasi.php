@@ -13,12 +13,12 @@
         <button class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm" data-toggle="modal"
             data-target="#tambahmodal" data-whatever="@mdo">
             <i class="fas fa-plus fa-sm text-white-50">
-            </i>Tambah Jadwal</button>
+            </i>Tambah Imunisasi</button>
     </div>
 
     <div class="card shadow mb-4 mb-6">
         <div class="card-header py-3">
-            <h6 class="m-0 font-weight-bold text-dark">Jadwal Imunisasi</h6>
+            <h6 class="m-0 font-weight-bold text-dark">Daftar Imunisasi</h6>
         </div>
         <div class="card-body">
 
@@ -48,12 +48,22 @@
             </div>
             <?php } ?>
             <!-- End Flash Data -->
-
+            <table border="0" cellspacing="5" cellpadding="5">
+                <tbody>
+                    <tr>
+                        <td>Minimum age:</td>
+                        <td><input type="date" data-date="" data-date-format="YYYY-MM-DD" class="date-range-filter" id="min" name="min"></td>
+                    </tr>
+                    <tr>
+                        <td>Maximum age:</td>
+                        <td><input type="date" data-date="" data-date-format="YYYY-MM-DD" class="date-range-filter" id="max" name="max"></td>
+                    </tr>
+                </tbody>
+            </table>
             <table id="example" class="display" style="width:100%">
                 <thead>
                     <tr>
                         <th>No</th>
-                        <th>ID Imunisasi</th>
                         <th>Nama Imunisasi</th>
                         <th>Tanggal Imunisasi</th>
                         <th>Action</th>
@@ -63,17 +73,18 @@
                     <?php $i = 1 ?>
                     <?php 
                     foreach ($imunisasi as $k) : 
-                        $slug = $k['tanggal_imunisasi'] ?>
-                    <?php $id = $k['id'] ?>
+                        $slug = $k['tanggal_imunisasi'];$id = $k['id'];?>
                     <tr>
                         <td><?= $i++; ?></td>
-                        <td><?= $id; ?></td>
                         <td><?= $k['nama_imunisasi']; ?></td>
                         <td><?= $k['tanggal_imunisasi']; ?></td>
                         <td>
-                            <a href="/kader/detailImunisasi/<?= $slug; ?>" class="btn btn-primary btn-circle">
-                                <i class="fas fa-list"></i>
-                            </a>
+                            <form action="/kader/detailImunisasi/<?= $slug; ?>/<?= $k['nama_imunisasi']; ?>" method="post" class="d-inline">
+                                <input type="hidden" name="idimunisasi" value="<?= $id?>">
+                                <button type="submit" class="btn btn-primary btn-circle">
+                                    <i class="fas fa-list"></i>
+                                </button>
+                            </form>
                             <a href="" class="btn btn-success btn-circle" data-toggle="modal"
                                 data-target="#editmodal<?= $id; ?>" data-whatever="@mdo">
                                 <i class="fas fa-edit"></i>
@@ -84,7 +95,6 @@
                             </a>
                         </td>
                     </tr>
-                </tbody>
                 <!-- Edit Modal -->
                 <div class="modal fade" id="editmodal<?= $id; ?>" tabindex="-1" aria-labelledby="exampleModalLabel"
                     aria-hidden="true">
@@ -146,9 +156,11 @@
                             </div>
                         </div>
                     </div>
+                </div>
                     <!-- End Modal -->
                     <?php endforeach ?>
                     <!-- End Modal -->
+                </tbody>
             </table>
             <!-- Tambah Modal -->
             <div class="modal fade" id="tambahmodal" tabindex="-1" aria-labelledby="exampleModalLabel"
@@ -196,10 +208,40 @@
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
     integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous">
 </script>
+<script src="https://code.jquery.com/jquery-3.5.1.js"></script>
 <script src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/datetime/1.1.0/js/dataTables.dateTime.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
 
 <script>
-$('#example').DataTable();
+    var table = $('#example').DataTable();
+    $.fn.dataTable.ext.search.push(
+        function(settings, data, dataIndex) {
+            var min = $('#min').val();
+            var max = $('#max').val();
+            var createdAt = data[2] || 0; // Our date column in the table
+
+            if (
+            (min == "" || max == "") ||
+            (moment(createdAt).isSameOrAfter(min) && moment(createdAt).isSameOrBefore(max))
+            ) {
+            return true;
+            }
+            return false;
+        }
+    );
+    
+    
+    $('.date-range-filter').change(function() {
+        table.draw();
+    });
+    $("input").on("change", function() {
+        this.setAttribute(
+            "data-date",
+            moment(this.value, "YYYY-MM-DD")
+            .format( this.getAttribute("data-date-format") )
+        )
+    }).trigger("change")
 </script>
 
 <!-- end content -->

@@ -12,28 +12,28 @@
                 <tbody>
                     <tr>
                         <td>Nama</td>
-                        <td><?php echo session()->get('user_name'); ?></td>
+                        <td><?php echo $data[0]['user_name'] ?></td>
                     </tr>
                     <tr>
                         <td>Email</td>
-                        <td><?php echo session()->get('user_email'); ?></td>
+                        <td><?php echo $data[0]['user_email'] ?></td>
 
                     </tr>
                     <tr>
                         <td>Nomor NIK</td>
-                        <td><?php echo session()->get('user_nik'); ?></td>
+                        <td><?php echo $data[0]['user_nik'] ?></td>
                     </tr>
                     <tr>
                         <td>Nomor KK</td>
-                        <td><?php echo session()->get('user_kk'); ?></td>
+                        <td><?php echo $data[0]['no_kk'] ?></td>
                     </tr>
                     <tr>
                         <td>No Tlp</td>
-                        <td><?php echo session()->get('user_phone'); ?></td>
+                        <td><?php echo $data[0]['user_phone'] ?></td>
                     </tr>
                     <tr>
                         <td>Alamat</td>
-                        <td><?php echo session()->get('user_alamat'); ?></td>
+                        <td><?php echo $data[0]['user_alamat'] ?></td>
                     </tr>
                     <tr>
                         <td colspan="2">

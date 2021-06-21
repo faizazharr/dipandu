@@ -7,7 +7,7 @@ use App\Models\PenyuluhanModel;
 use App\Models\UserModel;
 use App\Models\PesanModel;
 use App\Models\LaporanModel;
-
+use App\Models\PosianduModel;
 
 class Bidan extends BaseController
 {
@@ -23,6 +23,7 @@ class Bidan extends BaseController
         $this->userModel = new UserModel();
         $this->PesanModel = new PesanModel();
         $this->LaporanModel = new LaporanModel();
+        $this->PosianduModel = new PosianduModel();
 
     }
 
@@ -120,7 +121,8 @@ class Bidan extends BaseController
     {
         $data = array(
             'kegiatan' => $this->request->getVar('kegiatan'),
-            'date' => $this->request->getVar('date')
+            'date' => $this->request->getVar('date'),
+            'catatan' => $this->request->getVar('catatan'),
         );
 
         $this->penyuluhanmodel->save($data);
@@ -134,8 +136,9 @@ class Bidan extends BaseController
     {
         $data = array(
             'id' => $id,
-            'kegiatan' => $this->request->getVar('kegiatan'),
-            'date' => $this->request->getVar('date')
+            'kegiatan' => $this->request->getPost('kegiatan'),
+            'date' => $this->request->getPost('date'),
+            'catatan' => $this->request->getPost('catatan')
         );
         $this->penyuluhanmodel->save($data);
 
@@ -161,34 +164,49 @@ class Bidan extends BaseController
 
     public function profile()
     {
-        $data = ['title' => "Profile"];
+        $data = ['title' => "Profile",
+        'data' => $this->userModel->find(session()->get('id'))];
         return view('bidan/profile', $data);
     }
 
     public function edit_Profile()
     {
-        $data = ['title' => "Edit Profile"];
+        $data = ['title' => "Edit Profile",
+        'data' => $this->userModel->find(session()->get('id'))];
         return view('bidan/editprofile', $data);
     }
 
     public function editProfile($id)
     {
-        $data = array(
-            'id' => $id,
-            'user_email' => $this->request->getVar('email'),
-            'user_name' => $this->request->getVar('username'),
-            'user_password' => $this->request->getVar('password'),
-            'user_alamat' => $this->request->getVar('alamat'),
-            'user_phone' => $this->request->getVar('phone'),
-            'user_nik' => $this->request->getVar('nik')
-        );
+        if ($this->request->getVar('password') != null) {
+            $data = array(
+                'id' => $id,
+                'user_email' => $this->request->getVar('email'),
+                'user_name' => $this->request->getVar('username'),
+                'user_password' => $this->request->getVar('password'),
+                'user_alamat' => $this->request->getVar('alamat'),
+                'user_phone' => $this->request->getVar('phone'),
+                'user_nik' => $this->request->getVar('nik')
+            );
+            
+        }else{
+            $data = array(
+                'id' => $id,
+                'user_email' => $this->request->getVar('email'),
+                'user_name' => $this->request->getVar('username'),
+                'user_alamat' => $this->request->getVar('alamat'),
+                'user_phone' => $this->request->getVar('phone'),
+                'user_nik' => $this->request->getVar('nik')
+            );    
+        }
         $this->userModel->save($data);
         session()->setFlashdata('berhasil', 'Berhasil mengubah profile , untuk melihat perubahan harap logout terlebih dahulu. ');
         return redirect()->to(base_url('bidan/edit_Profile'));
     }
 
     public function laporan()
-    {   $laporan = $this->LaporanModel->findAll();
+    {   
+        $laporan = $this->PosianduModel->getDataPosyandu();
         $data = [
             'title' => "laporan",
             'laporan' => $laporan

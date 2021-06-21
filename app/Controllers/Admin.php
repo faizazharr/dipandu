@@ -52,29 +52,47 @@ class Admin extends BaseController
 
     public function profile()
     {
-        $data = ['title' => "Profile"];
+        
+        $data = [
+            'title' => "Profile",
+            'data' => $this->userModel->find(session()->get('id')),
+        ];
         return view('admin/profile', $data);
     }
 
     public function edit_profile()
     {
-        $data = ['title' => "Edit Profile"];
+        $data = ['title' => "Edit Profile",
+        'data' => $this->userModel->find(session()->get('id')),
+        ];
         return view('admin/editprofile', $data);
     }
 
       // edit user profile for user ortu
       public function editProfile($id)
       {
-          $data = array(
-              'id' => $id,
-              'user_email' => $this->request->getVar('email'),
-              'user_name' => $this->request->getVar('username'),
-              'user_password' => $this->request->getVar('password'),
-              'user_alamat' => $this->request->getVar('alamat'),
-              'user_phone' => $this->request->getVar('phone'),
-              'user_kk' => $this->request->getVar('kk'),
-              'user_nik' => $this->request->getVar('nik')
-          );
+          if ($this->request->getVar('password') != null) {
+              $data = array(
+                  'id' => $id,
+                  'user_email' => $this->request->getVar('email'),
+                  'user_name' => $this->request->getVar('username'),
+                  'user_password' => $this->request->getVar('password'),
+                  'user_alamat' => $this->request->getVar('alamat'),
+                  'user_phone' => $this->request->getVar('phone'),
+                  'user_kk' => $this->request->getVar('kk'),
+                  'user_nik' => $this->request->getVar('nik')
+              );
+            }else{
+              $data = array(
+                  'id' => $id,
+                  'user_email' => $this->request->getVar('email'),
+                  'user_name' => $this->request->getVar('username'),
+                  'user_alamat' => $this->request->getVar('alamat'),
+                  'user_phone' => $this->request->getVar('phone'),
+                  'user_kk' => $this->request->getVar('kk'),
+                  'user_nik' => $this->request->getVar('nik')
+              );
+          }
           $this->userModel->save($data);
           session()->setFlashdata('berhasil', 'Berhasil mengubah profile , untuk melihat perubahan harap logout terlebih dahulu. ');
           return redirect()->to(base_url('admin/edit_Profile'));

@@ -2,7 +2,7 @@
 <?= $this->section('content'); ?>
 <!-- Page Content -->
 <div class="container">
-
+    
     <?php foreach ($artikel as $key => $row) : ?>
         <div class="row">
             <!-- Post Content Column -->

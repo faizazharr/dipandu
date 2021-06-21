@@ -23,12 +23,12 @@
                 <div class="form-group">
                     <label for="username">Username</label>
                     <input type="text" class="form-control form-control-user" id="username"
-                        value="<?php echo session()->get('user_name'); ?>" name="username" autofocus>
+                        value="<?php echo $data['user_name'] ?>" name="username" autofocus>
                 </div>
                 <div class="form-group">
                     <label for="email">Email</label>
                     <input type="email" class="form-control form-control-user" id="email"
-                        value="<?php echo session()->get('user_email'); ?>" name="email">
+                        value="<?php echo $data['user_email'] ?>" name="email">
                 </div>
                 <div class="form-group">
                     <label for="password">Password</label>
@@ -38,12 +38,12 @@
                 <div class="form-group">
                     <label for="nik">NIK(Nomor induk kependudukan)</label>
                     <input type="text" class="form-control form-control-user" id="nik"
-                        value="<?php echo session()->get('user_nik'); ?>" name="nik">
+                        value="<?php echo $data['user_nik'] ?>" name="nik">
                 </div>
                 <div class="form-group">
                     <label for="alamat">Alamat</label>
                     <input type="text" class="form-control form-control-user" id="alamat"
-                        value="<?php echo session()->get('user_alamat'); ?>" name="alamat">
+                        value="<?php echo $data['user_alamat'] ?>" name="alamat">
                 </div>
                 <button type="submit" class="btn btn-primary btn-block">Submit</button>
             </form>

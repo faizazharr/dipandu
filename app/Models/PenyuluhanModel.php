@@ -8,7 +8,7 @@ class PenyuluhanModel extends Model
 {
     protected $table = 'penyuluhan';
     protected $primaryKey = 'id';
-    protected $allowedFields = ['kegiatan', 'date'];
+    protected $allowedFields = ['kegiatan', 'date','catatan'];
 
     public function saveData($data)
     {
